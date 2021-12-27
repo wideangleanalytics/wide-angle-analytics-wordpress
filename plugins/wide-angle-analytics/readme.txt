@@ -3,7 +3,7 @@ Contributors: jrozanski,inputobjects
 Tags: web analytics, tracking, web traffic, analytics
 Requires at least: 5.2
 Tested up to: 5.8.2
-Requires PHP: 7.4
+Requires PHP: 7.2
 Stable tag: trunk
 License: GPLv2
 
