@@ -7,7 +7,7 @@ Easily add [Wide Angle Analytics](https://wideangle.co) tracker script to your W
 
 * Requires at least: 5.2
 * Tested up to: 5.8.2
-* Requires PHP: 7.4
+* Requires PHP: 7.2
 
 
 **Wide Angle Analytics** 📈 is a privacy-friendly, GDPR-compliant web analytics service. You can deploy it cookieless or with cookies enabled.
