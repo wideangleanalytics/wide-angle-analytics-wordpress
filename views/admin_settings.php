@@ -31,9 +31,18 @@ $parsedIncludeParams  = $this->plugin->helpers->parseIncludeParamsSetting($this-
   <?php
   }
   if ( isset( $this->errorMessage ) ) {
+    if(is_array($this->errorMessage)) {
+      foreach($this->errorMessage as $error) {
+        ?>
+    <div class="error fade"><p><?php echo esc_html($error); ?></p></div>
+        <?php
+      }
+    }
+    else {
   ?>
     <div class="error fade"><p><?php echo esc_html($this->errorMessage); ?></p></div>
   <?php
+    }
   }
   ?>
   <div>
@@ -43,14 +52,14 @@ $parsedIncludeParams  = $this->plugin->helpers->parseIncludeParamsSetting($this-
           <tr>
             <th scope="row"><label>Site ID</label></th>
             <td>
-              <input id="waa_site_id" type="text" name="waa_site_id" pattern="[A-Z0-9]{10,24}" class="regular-text" value="<?php echo esc_attr($siteId); ?>"/>
+              <input id="waa_site_id" type="text" name="waa_site_id" class="regular-text" value="<?php echo esc_attr($siteId); ?>"/>
               <p class="description" id="tagline-description">A Site ID. You will find it in the Site Settings, in Wide Angle Analytics Dashboard.</p>
             </td>
           </tr>
           <tr>
             <th scope="row"><label>Tracker Domain</label></th>
             <td>
-              <input id="waa_tracker_domain" type="url" name="waa_tracker_domain" class="regular-text code" value="<?php echo esc_attr($trackerDomain); ?>"/>
+              <input id="waa_tracker_domain" type="text" name="waa_tracker_domain" class="regular-text code" value="<?php echo esc_attr($trackerDomain); ?>"/>
               <p class="description" id="tagline-description">A domain you selected for your tracker. You can check current domain in the Site Settings, in the Wide Angle Analytics. If you haven't set custom domain for your site, there is no need to change this field.</p>
             </td>
           </tr>
@@ -71,8 +80,6 @@ $parsedIncludeParams  = $this->plugin->helpers->parseIncludeParamsSetting($this-
                     <?php
                       }
                     ?>
-                    <option value="end"<?php if($exclusion->get_type() == "end") echo ' selected'; ?>>Ends with</option>
-                    <option value="regex"<?php if($exclusion->get_type() == "regex") echo ' selected'; ?>>RegEx</option>
                   </select>
                   <input type="text" name="waa_exc_path_<?php echo esc_attr($i); ?>_value" value="<?php echo esc_attr($exclusion->get_value()); ?>"/>
                   <button data-waa-action="remove_exclusion" data-waa-exc-path="<?php echo esc_attr($i); ?>" class="button button-secondary">Remove</button>
@@ -94,7 +101,7 @@ $parsedIncludeParams  = $this->plugin->helpers->parseIncludeParamsSetting($this-
                   $param = $parsedIncludeParams[$i];
                 ?>
                 <div data-waa-inc-params="<?php echo esc_attr($i); ?>" style="display: flex; flex-direction: row; margin-bottom: 0.3rem">
-                  <input type="text" name="waa_inc_params_<?php echo esc_attr($i); ?>" value="<?php echo esc_attr($param); ?>" pattern="[A-Za-z0-9_-]{1,128}"/>
+                  <input type="text" name="waa_inc_params_<?php echo esc_attr($i); ?>" value="<?php echo esc_attr($param); ?>"/>
                   <button data-waa-action="remove_param" data-waa-inc-params="<?php echo esc_attr($i); ?>" class="button button-secondary">Remove</button>
                 </div>
                 <?php
