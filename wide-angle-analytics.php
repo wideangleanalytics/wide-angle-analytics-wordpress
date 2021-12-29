@@ -5,7 +5,7 @@
   Description:          Easily enable and configure Wide Angle Analytics on your Wordpress site
   Author:               Wide Angle Analytics by Input Objects GmbH
   Author URI:           https://wideangle.co
-  Version:              1.0.1
+  Version:              1.0.2
   Requires at least:    5.2
   Requires PHP:         7.2
   License:              GPL v2
@@ -37,8 +37,8 @@ class WideAngleAnalytics {
       "regex" => "RegEx",
     );
 
-    add_action( 'admin_init', array( &$this, 'registerPluginSettings' ) );
-    add_action( 'admin_menu', array( &$this, 'registerAdminMenu' ));
+    add_action('admin_init', array( &$this, 'registerPluginSettings' ) );
+    add_action('admin_menu', array( &$this, 'registerAdminMenu' ));
     add_action('wp_head', array( &$this, 'renderHeaderScript'));
     add_action('wp_footer', array( &$this, 'renderFooterScript'));
   }

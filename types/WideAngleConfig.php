@@ -26,11 +26,12 @@ EOD;
   function generateFooterScript() {
     $pathExlusionsAttribute = $this->generateExclusionsAttribute();
     $includeParamsAttribute = $this->generateIncludeParamsAttribute();
-
+    $trackerUrlAttribute = esc_attr("https://{$this->trackerDomain}/script/{$this->siteId}.js");
+    $ignoreHashAttribute = esc_attr($this->ignoreHash);
     $script = <<<EOD
 <script async defer
-  src="https://{$this->trackerDomain}/script/{$this->siteId}.js"
-  data-waa-ignore-hash="{$this->ignoreHash}"
+  src="{$trackerUrlAttribute}"
+  data-waa-ignore-hash="{$ignoreHashAttribute}"
   $includeParamsAttribute
   $pathExlusionsAttribute></script>
 EOD;
@@ -40,7 +41,7 @@ EOD;
   private function generateIncludeParamsAttribute() {
     $params = $this->helpers->parseIncludeParamsSetting($this->includeParamsString);
     if(sizeof($params) > 0) {
-      return "data-waa-inc-params=\"" . implode(",", $params) . "\"";
+      return "data-waa-inc-params=\"" . esc_attr(implode(",", $params)) . "\"";
     }
     return "";
   }
@@ -54,7 +55,7 @@ EOD;
 
     $pathExlusionsAttributeWithKey = "";
     if(trim($pathExlusionsAttribute) != "") {
-      $pathExlusionsAttributeWithKey = "data-waa-exc-paths=\"" . $pathExlusionsAttribute ."\"";
+      $pathExlusionsAttributeWithKey = "data-waa-exc-paths=\"" . esc_attr($pathExlusionsAttribute) ."\"";
     }
     return $pathExlusionsAttributeWithKey;
   }
