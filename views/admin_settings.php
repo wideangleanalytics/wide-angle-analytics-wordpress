@@ -7,7 +7,7 @@ $parsedIncludeParams  = $this->plugin->helpers->parseIncludeParamsSetting($this-
 ?>
 <div class="wrap">
   <h2>
-    <?php echo $this->plugin->displayName; ?> &raquo; <?php esc_html_e( 'Settings', 'wide-angle-analytics' ); ?>
+    <?php echo $this->plugin->displayName; ?> &raquo; <?php esc_html( 'Settings', 'wide-angle-analytics' ); ?>
   </h2>
 
   <div>
@@ -27,30 +27,39 @@ $parsedIncludeParams  = $this->plugin->helpers->parseIncludeParamsSetting($this-
   <?php
   if ( isset( $this->message ) ) {
   ?>
-    <div class="updated fade"><p><?php echo $this->message; ?></p></div>
+    <div class="updated fade"><p><?php echo esc_html($this->message); ?></p></div>
   <?php
   }
   if ( isset( $this->errorMessage ) ) {
+    if(is_array($this->errorMessage)) {
+      foreach($this->errorMessage as $error) {
+        ?>
+    <div class="error fade"><p><?php echo esc_html($error); ?></p></div>
+        <?php
+      }
+    }
+    else {
   ?>
-    <div class="error fade"><p><?php echo $this->errorMessage; ?></p></div>
+    <div class="error fade"><p><?php echo esc_html($this->errorMessage); ?></p></div>
   <?php
+    }
   }
   ?>
   <div>
-    <form action="options-general.php?page=<?php echo $this->plugin->name; ?>" method="post">
+    <form action="options-general.php?page=<?php echo esc_attr($this->plugin->name); ?>" method="post">
       <table class="form-table" role="presentation">
         <tbody>
           <tr>
             <th scope="row"><label>Site ID</label></th>
             <td>
-              <input id="waa_site_id" type="text" name="waa_site_id" pattern="[A-Z0-9]{10,24}" class="regular-text" value="<?php echo $siteId ?>"/>
+              <input id="waa_site_id" type="text" name="waa_site_id" class="regular-text" value="<?php echo esc_attr($siteId); ?>"/>
               <p class="description" id="tagline-description">A Site ID. You will find it in the Site Settings, in Wide Angle Analytics Dashboard.</p>
             </td>
           </tr>
           <tr>
             <th scope="row"><label>Tracker Domain</label></th>
             <td>
-              <input id="waa_tracker_domain" type="url" name="waa_tracker_domain" class="regular-text code" value="<?php echo $trackerDomain ?>"/>
+              <input id="waa_tracker_domain" type="text" name="waa_tracker_domain" class="regular-text code" value="<?php echo esc_attr($trackerDomain); ?>"/>
               <p class="description" id="tagline-description">A domain you selected for your tracker. You can check current domain in the Site Settings, in the Wide Angle Analytics. If you haven't set custom domain for your site, there is no need to change this field.</p>
             </td>
           </tr>
@@ -62,20 +71,18 @@ $parsedIncludeParams  = $this->plugin->helpers->parseIncludeParamsSetting($this-
                 for($i = 0; $i < sizeof($parsedExclusions); $i++) {
                   $exclusion = $parsedExclusions[$i];
                 ?>
-                <div data-waa-exc-path="<?php echo $i; ?>" style="display: flex; flex-direction: row; margin-bottom: 0.3rem">
-                  <select name="waa_exc_path_<?php echo $i; ?>_type" id="waa_exc_path_<?php echo $i; ?>_type">
+                <div data-waa-exc-path="<?php echo esc_attr($i); ?>" style="display: flex; flex-direction: row; margin-bottom: 0.3rem">
+                  <select name="waa_exc_path_<?php echo esc_attr($i); ?>_type" id="waa_exc_path_<?php echo esc_attr($i); ?>_type">
                     <?php
                       foreach($this->plugin->exclusionTypes as $id => $label) {
                     ?>
-                      <option value="<?php echo $id ?>"<?php if($exclusion->get_type() == $id) echo ' selected'; ?>><?php echo $label ?></option>
+                      <option value="<?php echo esc_attr($id); ?>"<?php if($exclusion->get_type() == $id) echo ' selected'; ?>><?php echo esc_html($label); ?></option>
                     <?php
                       }
                     ?>
-                    <option value="end"<?php if($exclusion->get_type() == "end") echo ' selected'; ?>>Ends with</option>
-                    <option value="regex"<?php if($exclusion->get_type() == "regex") echo ' selected'; ?>>RegEx</option>
                   </select>
-                  <input type="text" name="waa_exc_path_<?php echo $i; ?>_value" value="<?php echo $exclusion->get_value(); ?>"/>
-                  <button data-waa-action="remove_exclusion" data-waa-exc-path="<?php echo $i; ?>" class="button button-secondary">Remove</button>
+                  <input type="text" name="waa_exc_path_<?php echo esc_attr($i); ?>_value" value="<?php echo esc_attr($exclusion->get_value()); ?>"/>
+                  <button data-waa-action="remove_exclusion" data-waa-exc-path="<?php echo esc_attr($i); ?>" class="button button-secondary">Remove</button>
                 </div>
                 <?php
                 }
@@ -93,9 +100,9 @@ $parsedIncludeParams  = $this->plugin->helpers->parseIncludeParamsSetting($this-
                 for($i = 0; $i < sizeof($parsedIncludeParams); $i++) {
                   $param = $parsedIncludeParams[$i];
                 ?>
-                <div data-waa-inc-params="<?php echo $i; ?>" style="display: flex; flex-direction: row; margin-bottom: 0.3rem">
-                  <input type="text" name="waa_inc_params_<?php echo $i; ?>" value="<?php echo $param; ?>" pattern="[A-Za-z0-9_-]{1,128}"/>
-                  <button data-waa-action="remove_param" data-waa-inc-params="<?php echo $i; ?>" class="button button-secondary">Remove</button>
+                <div data-waa-inc-params="<?php echo esc_attr($i); ?>" style="display: flex; flex-direction: row; margin-bottom: 0.3rem">
+                  <input type="text" name="waa_inc_params_<?php echo esc_attr($i); ?>" value="<?php echo esc_attr($param); ?>"/>
+                  <button data-waa-action="remove_param" data-waa-inc-params="<?php echo esc_attr($i); ?>" class="button button-secondary">Remove</button>
                 </div>
                 <?php
                 }
@@ -129,11 +136,11 @@ $parsedIncludeParams  = $this->plugin->helpers->parseIncludeParamsSetting($this-
 <pre style="padding: 1rem; border: 1px solid;">
 &lt;head&gt;
 &lt;!-- .. --&gt;
-<b><?php echo $this->settings[self::WAA_CONF_GENERATED_HEADER_SCRIPT]; ?></b>
+<b><?php echo esc_html($this->settings[self::WAA_CONF_GENERATED_HEADER_SCRIPT]); ?></b>
 
 &lt;/head&gt;
 &lt;!-- .. --&gt;
-<b><?php echo $this->settings[self::WAA_CONF_GENERATED_FOOTER_SCRIPT]; ?></b>
+<b><?php echo esc_html($this->settings[self::WAA_CONF_GENERATED_FOOTER_SCRIPT]); ?></b>
 </pre>
 </code>
     </div>

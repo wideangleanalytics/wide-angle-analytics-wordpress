@@ -18,7 +18,7 @@ class WideAngleConfig {
 
   function generateHeaderScript() {
     $script = <<<EOD
-<link href="{$this->trackerDomain}/script/{$this->siteId}.js" ref="prefetch"/>
+<link href="https://{$this->trackerDomain}/script/{$this->siteId}.js" ref="prefetch"/>
 EOD;
     return $script;
   }
@@ -29,7 +29,7 @@ EOD;
 
     $script = <<<EOD
 <script async defer
-  src="{$this->trackerDomain}/script/{$this->siteId}.js"
+  src="https://{$this->trackerDomain}/script/{$this->siteId}.js"
   data-waa-ignore-hash="{$this->ignoreHash}"
   $includeParamsAttribute
   $pathExlusionsAttribute></script>
