@@ -1,5 +1,5 @@
 <?php
-class WideAngleConfig {
+class WideAngleAttributes {
   public $siteId;
   public $ignoreHash;
   public $trackerDomain;
@@ -16,34 +16,20 @@ class WideAngleConfig {
     $this->helpers = new WideAngleHelpers();
   }
 
-  function generateHeaderScript() {
-    $script = <<<EOD
-<link href="https://{$this->trackerDomain}/script/{$this->siteId}.js" ref="prefetch"/>
-EOD;
-    return $script;
+  public function generateAttributes() {
+    return array(
+      'site_id' => $this->siteId,
+      'tracker_domain' => $this->trackerDomain,
+      'ignore_hash' => $this->ignoreHash,
+      'exclusion_paths' => $this->generateExclusionsAttribute(),
+      'include_params' => $this->generateIncludeParamsAttribute()
+    );
   }
 
-  function generateFooterScript() {
-    $pathExlusionsAttribute = $this->generateExclusionsAttribute();
-    $includeParamsAttribute = $this->generateIncludeParamsAttribute();
-    $trackerUrlAttribute = esc_attr("https://{$this->trackerDomain}/script/{$this->siteId}.js");
-    $ignoreHashAttribute = esc_attr($this->ignoreHash);
-    $script = <<<EOD
-<script async defer
-  src="{$trackerUrlAttribute}"
-  data-waa-ignore-hash="{$ignoreHashAttribute}"
-  $includeParamsAttribute
-  $pathExlusionsAttribute></script>
-EOD;
-    return preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $script);
-  }
 
   private function generateIncludeParamsAttribute() {
     $params = $this->helpers->parseIncludeParamsSetting($this->includeParamsString);
-    if(sizeof($params) > 0) {
-      return "data-waa-inc-params=\"" . esc_attr(implode(",", $params)) . "\"";
-    }
-    return "";
+    return implode(",", $params);
   }
 
   private function generateExclusionsAttribute() {
@@ -53,11 +39,7 @@ EOD;
       $pathExlusionsAttribute = $this->generateExclusionsAttributeValue($exclusions);
     }
 
-    $pathExlusionsAttributeWithKey = "";
-    if(trim($pathExlusionsAttribute) != "") {
-      $pathExlusionsAttributeWithKey = "data-waa-exc-paths=\"" . esc_attr($pathExlusionsAttribute) ."\"";
-    }
-    return $pathExlusionsAttributeWithKey;
+    return $pathExlusionsAttribute;
   }
 
   private function generateExclusionsAttributeValue($exclusions) {

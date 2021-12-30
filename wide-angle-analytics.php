@@ -20,8 +20,7 @@ class WideAngleAnalytics {
   const WAA_CONF_EXC_PATHS                = "waa_exc_path";
   const WAA_CONF_INC_PARAMS               = "waa_inc_params";
   const WAA_CONF_IGNORE_HASH              = "waa_ignore_hash";
-  const WAA_CONF_GENERATED_HEADER_SCRIPT  = "waa_header_script";
-  const WAA_CONF_GENERATED_FOOTER_SCRIPT  = "waa_footer_script";
+  const WAA_CONF_ATTRIBUTES               = "waa_attributes";
 
   public function __construct() {
     $this->plugin = new stdClass;
@@ -29,6 +28,7 @@ class WideAngleAnalytics {
     $this->plugin->displayName = 'Wide Angle Analytics';
     $this->plugin->folder = plugin_dir_path( __FILE__ );
     include_once( $this->plugin->folder . '/types/WideAngleHelpers.php' );
+    include_once( $this->plugin->folder . '/types/WideAngleGenerator.php' );
 
     $this->plugin->helpers = new WideAngleHelpers();
     $this->plugin->exclusionTypes = array(
@@ -48,7 +48,8 @@ class WideAngleAnalytics {
    * Inteded to be used with 'wp_head' hook.
    */
   function renderHeaderScript() {
-    $this->renderSetting(self::WAA_CONF_GENERATED_HEADER_SCRIPT);
+    $generator = new WideAngleGenerator(get_option(self::WAA_CONF_ATTRIBUTES));
+    $this->renderContent($generator->generateHeaderScript()); // The Escaping takes place in the WideAngleGenerator::generateHeaderScript method.
   }
 
   /**
@@ -56,14 +57,16 @@ class WideAngleAnalytics {
    * Inteded to be used with 'wp_footer' hook.
    */
   function renderFooterScript() {
-    $this->renderSetting(self::WAA_CONF_GENERATED_FOOTER_SCRIPT);
+    $generator = new WideAngleGenerator(get_option(self::WAA_CONF_ATTRIBUTES));
+    $this->renderContent($generator->generateHeaderScript()); // The Escaping takes place in the WideAngleGenerator::generateHeaderScript method.
   }
 
   /**
-   * When called, renders content of named setting.
-   * Rendering is omitted if current view is: Admin, Feed, Robots or Trackback.
+   * Helper function to render provided content "as-is" when rendering public facing page.
+   *
+   * The $content is already escaped.
    */
-  function renderSetting($setting) {
+  private function renderContent($content) {
     if (
       is_admin() ||
       is_feed() ||
@@ -71,12 +74,10 @@ class WideAngleAnalytics {
       is_trackback()) {
       return;
     }
-
-    $script = get_option($setting);
-    if(trim($script) === "") {
+    if(trim($content) === "") {
       return;
     }
-    echo wp_unslash($script);
+    echo wp_unslash($content);
   }
 
   /**
@@ -111,13 +112,13 @@ class WideAngleAnalytics {
       } elseif ( ! wp_verify_nonce( $_REQUEST[ $this->plugin->name . '_nonce' ], $this->plugin->name ) ) {
         $this->errorMessage = __( 'Invalid nonce specified. Settings NOT saved.', $this->plugin->name );
       } else {
-        $waaSiteId = $this->plugin->helpers->validateSiteId(self::WAA_CONF_SITE_ID, $_REQUEST['waa_site_id']);
-        $waaTrackerDomain = $this->plugin->helpers->validateTrackerDomain(self::WAA_CONF_TRACKER_DOMAIN, $_REQUEST['waa_tracker_domain']);
-        $waaIgnoreHash = $this->plugin->helpers->validateIgnoreHashFlag(self::WAA_CONF_IGNORE_HASH, $_REQUEST['waa_ignore_hash']);
-        $waaIncParams = $this->plugin->helpers->validateIncludeParams(self::WAA_CONF_INC_PARAMS, $_REQUEST);
-        $waaExclusionPaths = $this->plugin->helpers->validateExclusionPathsRequest(self::WAA_CONF_EXC_PATHS, $_REQUEST);
+        $waaSiteId          = $this->plugin->helpers->validateSiteId(self::WAA_CONF_SITE_ID, $_REQUEST['waa_site_id']);
+        $waaTrackerDomain   = $this->plugin->helpers->validateTrackerDomain(self::WAA_CONF_TRACKER_DOMAIN, $_REQUEST['waa_tracker_domain']);
+        $waaIgnoreHash      = $this->plugin->helpers->validateIgnoreHashFlag(self::WAA_CONF_IGNORE_HASH, $_REQUEST['waa_ignore_hash']);
+        $waaIncParams       = $this->plugin->helpers->validateIncludeParams(self::WAA_CONF_INC_PARAMS, $_REQUEST);
+        $waaExclusionPaths  = $this->plugin->helpers->validateExclusionPathsRequest(self::WAA_CONF_EXC_PATHS, $_REQUEST);
 
-        include_once( $this->plugin->folder . '/types/WideAngleConfig.php');
+        include_once( $this->plugin->folder . '/types/WideAngleAttributes.php');
         $merged = array($waaSiteId, $waaTrackerDomain, $waaIgnoreHash, $waaIncParams, $waaExclusionPaths);
         $errors = array();
         foreach($merged as $validated) {
@@ -127,15 +128,14 @@ class WideAngleAnalytics {
         }
 
         if(count($errors) === 0) {
-          $config = new WideAngleConfig($waaSiteId->get_value(), $waaTrackerDomain->get_value(), $waaIgnoreHash->get_value(), $waaExclusionPaths->get_value(), $waaIncParams->get_value());
+          $attributes = new WideAngleAttributes($waaSiteId->get_value(), $waaTrackerDomain->get_value(), $waaIgnoreHash->get_value(), $waaExclusionPaths->get_value(), $waaIncParams->get_value());
 
-          update_option(self::WAA_CONF_GENERATED_FOOTER_SCRIPT, $config->generateFooterScript());
-          update_option(self::WAA_CONF_GENERATED_HEADER_SCRIPT, $config->generateHeaderScript());
-          update_option(self::WAA_CONF_SITE_ID, $waaSiteId->get_value());
-          update_option(self::WAA_CONF_TRACKER_DOMAIN, $waaTrackerDomain->get_value());
-          update_option(self::WAA_CONF_IGNORE_HASH, $waaIgnoreHash->get_value());
-          update_option(self::WAA_CONF_EXC_PATHS, $waaExclusionPaths->get_value());
-          update_option(self::WAA_CONF_INC_PARAMS, $waaIncParams->get_value());
+          update_option(self::WAA_CONF_SITE_ID,         $waaSiteId->get_value());
+          update_option(self::WAA_CONF_TRACKER_DOMAIN,  $waaTrackerDomain->get_value());
+          update_option(self::WAA_CONF_IGNORE_HASH,     $waaIgnoreHash->get_value());
+          update_option(self::WAA_CONF_EXC_PATHS,       $waaExclusionPaths->get_value());
+          update_option(self::WAA_CONF_INC_PARAMS,      $waaIncParams->get_value());
+          update_option(self::WAA_CONF_ATTRIBUTES,      $attributes->generateAttributes());
           $this->message = __('Settings updated', $this->plugin->name);
         } else {
           $this->errorMessage = $errors;
@@ -143,13 +143,12 @@ class WideAngleAnalytics {
       }
     }
     $this->settings = array(
-      self::WAA_CONF_SITE_ID                  => get_option( self::WAA_CONF_SITE_ID),
-      self::WAA_CONF_EXC_PATHS                => get_option( self::WAA_CONF_EXC_PATHS),
-      self::WAA_CONF_INC_PARAMS               => get_option( self::WAA_CONF_INC_PARAMS),
-      self::WAA_CONF_TRACKER_DOMAIN           => get_option( self::WAA_CONF_TRACKER_DOMAIN),
-      self::WAA_CONF_IGNORE_HASH              => get_option( self::WAA_CONF_IGNORE_HASH),
-      self::WAA_CONF_GENERATED_HEADER_SCRIPT  => get_option( self::WAA_CONF_GENERATED_HEADER_SCRIPT),
-      self::WAA_CONF_GENERATED_FOOTER_SCRIPT  => get_option( self::WAA_CONF_GENERATED_FOOTER_SCRIPT),
+      self::WAA_CONF_SITE_ID                  => get_option(self::WAA_CONF_SITE_ID),
+      self::WAA_CONF_EXC_PATHS                => get_option(self::WAA_CONF_EXC_PATHS),
+      self::WAA_CONF_INC_PARAMS               => get_option(self::WAA_CONF_INC_PARAMS),
+      self::WAA_CONF_TRACKER_DOMAIN           => get_option(self::WAA_CONF_TRACKER_DOMAIN),
+      self::WAA_CONF_IGNORE_HASH              => get_option(self::WAA_CONF_IGNORE_HASH),
+      self::WAA_CONF_ATTRIBUTES               => get_option(self::WAA_CONF_ATTRIBUTES)
     );
     include_once( $this->plugin->folder . '/views/admin_settings.php' );
   }
@@ -172,8 +171,7 @@ class WideAngleAnalytics {
     register_setting($this->plugin->name, self::WAA_CONF_INC_PARAMS);
     register_setting($this->plugin->name, self::WAA_CONF_TRACKER_DOMAIN, array('default' => 'stats.wideangle.co'));
     register_setting($this->plugin->name, self::WAA_CONF_IGNORE_HASH, array('default' => 'false'));
-    register_setting($this->plugin->name, self::WAA_CONF_GENERATED_HEADER_SCRIPT);
-    register_setting($this->plugin->name, self::WAA_CONF_GENERATED_FOOTER_SCRIPT);
+    register_setting($this->plugin->name, self::WAA_CONF_ATTRIBUTES, array('type' => 'array'));
   }
 
 }
