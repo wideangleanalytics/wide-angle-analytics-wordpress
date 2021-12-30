@@ -1,9 +1,9 @@
 <?php
-$siteId               = $this->settings[self::WAA_CONF_SITE_ID];
-$trackerDomain        = $this->settings[self::WAA_CONF_TRACKER_DOMAIN];
+$siteId               = wp_unslash($this->settings[self::WAA_CONF_SITE_ID]);
+$trackerDomain        = wp_unslash($this->settings[self::WAA_CONF_TRACKER_DOMAIN]);
 $ignoreHash           = filter_var($this->settings[self::WAA_CONF_IGNORE_HASH], FILTER_VALIDATE_BOOLEAN);
-$parsedExclusions     = $this->plugin->helpers->parseExclusionSetting($this->settings[self::WAA_CONF_EXC_PATHS]);
-$parsedIncludeParams  = $this->plugin->helpers->parseIncludeParamsSetting($this->settings[self::WAA_CONF_INC_PARAMS]);
+$parsedExclusions     = $this->plugin->helpers->parseExclusionSetting(wp_unslash($this->settings[self::WAA_CONF_EXC_PATHS]));
+$parsedIncludeParams  = $this->plugin->helpers->parseIncludeParamsSetting(wp_unslash($this->settings[self::WAA_CONF_INC_PARAMS]));
 $generator            = new WideAngleGenerator($this->settings[self::WAA_CONF_ATTRIBUTES]);
 ?>
 <div class="wrap">

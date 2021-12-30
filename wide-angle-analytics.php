@@ -112,9 +112,9 @@ class WideAngleAnalytics {
       } elseif ( ! wp_verify_nonce( $_REQUEST[ $this->plugin->name . '_nonce' ], $this->plugin->name ) ) {
         $this->errorMessage = __( 'Invalid nonce specified. Settings NOT saved.', $this->plugin->name );
       } else {
-        $waaSiteId          = $this->plugin->helpers->validateSiteId(self::WAA_CONF_SITE_ID, $_REQUEST['waa_site_id']);
-        $waaTrackerDomain   = $this->plugin->helpers->validateTrackerDomain(self::WAA_CONF_TRACKER_DOMAIN, $_REQUEST['waa_tracker_domain']);
-        $waaIgnoreHash      = $this->plugin->helpers->validateIgnoreHashFlag(self::WAA_CONF_IGNORE_HASH, $_REQUEST['waa_ignore_hash']);
+        $waaSiteId          = $this->plugin->helpers->validateSiteId(self::WAA_CONF_SITE_ID, sanitize_text_field($_REQUEST['waa_site_id']));
+        $waaTrackerDomain   = $this->plugin->helpers->validateTrackerDomain(self::WAA_CONF_TRACKER_DOMAIN, sanitize_text_field($_REQUEST['waa_tracker_domain']));
+        $waaIgnoreHash      = $this->plugin->helpers->validateIgnoreHashFlag(self::WAA_CONF_IGNORE_HASH, sanitize_text_field($_REQUEST['waa_ignore_hash']));
         $waaIncParams       = $this->plugin->helpers->validateIncludeParams(self::WAA_CONF_INC_PARAMS, $_REQUEST);
         $waaExclusionPaths  = $this->plugin->helpers->validateExclusionPathsRequest(self::WAA_CONF_EXC_PATHS, $_REQUEST);
 

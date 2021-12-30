@@ -50,10 +50,11 @@ class WideAngleHelpers {
     $params = array();
     foreach($request as $requestKey => $paramValue) {
       if(preg_match(self::includeParamRequestKeyPattern, $requestKey)) {
-        if(preg_match(self::includeParamRequestValuePattern, $paramValue)) {
-          array_push($params, trim($paramValue));
+        $sanitizedValue = sanitize_text_field($paramValue);
+        if(preg_match(self::includeParamRequestValuePattern, $sanitizedValue)) {
+          array_push($params, trim($sanitizedValue));
         } else {
-          return WideAngleValidated::createInvalid($name, $paramValue, "Name of parameter to include in request must consint of letters, numbers and can contain _ or - sign only.");
+          return WideAngleValidated::createInvalid($name, $sanitizedValue, "Name of parameter to include in request must consint of letters, numbers and can contain _ or - sign only.");
         }
       }
     }
@@ -67,13 +68,13 @@ class WideAngleHelpers {
       $idx = array();
       if(preg_match(self::excludePathRequestKeyPattern, $key, $idx)) {
         $valueKey = "waa_exc_path_".$idx[1]."_value";
-        $exclusionValue = trim($request[$valueKey]);
-        if($exclusionValue != null) {
-          if(filter_var($exclusionValue, FILTER_VALIDATE_REGEXP)) {
-            $typedExclusion = "[" . $exclusionType . "]" . $exclusionValue;
+        $sanitizedValue = trim(sanitize_text_field($request[$valueKey]));
+        if($sanitizedValue != null) {
+          if(filter_var($sanitizedValue, FILTER_VALIDATE_REGEXP)) {
+            $typedExclusion = "[" . $exclusionType . "]" . $sanitizedValue;
             array_push($exclusions, $typedExclusion);
           } else {
-            $typedExclusion = "[" . $exclusionType . "]" . filter_var($exclusionValue, FILTER_SANITIZE_SPECIAL_CHARS);
+            $typedExclusion = "[" . $exclusionType . "]" . filter_var($sanitizedValue, FILTER_SANITIZE_SPECIAL_CHARS);
             array_push($exclusions, $typedExclusion);
           }
         }
