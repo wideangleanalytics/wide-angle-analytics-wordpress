@@ -1,9 +1,10 @@
 <?php
-$siteId               = $this->settings[self::WAA_CONF_SITE_ID];
-$trackerDomain        = $this->settings[self::WAA_CONF_TRACKER_DOMAIN];
+$siteId               = wp_unslash($this->settings[self::WAA_CONF_SITE_ID]);
+$trackerDomain        = wp_unslash($this->settings[self::WAA_CONF_TRACKER_DOMAIN]);
 $ignoreHash           = filter_var($this->settings[self::WAA_CONF_IGNORE_HASH], FILTER_VALIDATE_BOOLEAN);
-$parsedExclusions     = $this->plugin->helpers->parseExclusionSetting($this->settings[self::WAA_CONF_EXC_PATHS]);
-$parsedIncludeParams  = $this->plugin->helpers->parseIncludeParamsSetting($this->settings[self::WAA_CONF_INC_PARAMS]);
+$parsedExclusions     = $this->plugin->helpers->parseExclusionSetting(wp_unslash($this->settings[self::WAA_CONF_EXC_PATHS]));
+$parsedIncludeParams  = $this->plugin->helpers->parseIncludeParamsSetting(wp_unslash($this->settings[self::WAA_CONF_INC_PARAMS]));
+$generator            = new WideAngleGenerator($this->settings[self::WAA_CONF_ATTRIBUTES]);
 ?>
 <div class="wrap">
   <h2>
@@ -136,11 +137,11 @@ $parsedIncludeParams  = $this->plugin->helpers->parseIncludeParamsSetting($this-
 <pre style="padding: 1rem; border: 1px solid;">
 &lt;head&gt;
 &lt;!-- .. --&gt;
-<b><?php echo esc_html($this->settings[self::WAA_CONF_GENERATED_HEADER_SCRIPT]); ?></b>
+<b><?php echo esc_html($generator->generateHeaderScript()); ?></b>
 
 &lt;/head&gt;
 &lt;!-- .. --&gt;
-<b><?php echo esc_html($this->settings[self::WAA_CONF_GENERATED_FOOTER_SCRIPT]); ?></b>
+<b><?php echo esc_html($generator->generateFooterScript()); ?></b>
 </pre>
 </code>
     </div>
