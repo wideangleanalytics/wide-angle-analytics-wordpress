@@ -39,6 +39,8 @@ class WideAngleAnalytics {
 
     add_action('admin_init', array( &$this, 'registerPluginSettings' ) );
     add_action('admin_menu', array( &$this, 'registerAdminMenu' ));
+
+    $this->plugin->generator = new WideAngleGenerator(get_option(self::WAA_CONF_ATTRIBUTES));
     add_action('wp_head', array( &$this, 'renderHeaderScript'));
     add_action('wp_footer', array( &$this, 'renderFooterScript'));
   }
@@ -48,8 +50,7 @@ class WideAngleAnalytics {
    * Inteded to be used with 'wp_head' hook.
    */
   function renderHeaderScript() {
-    $generator = new WideAngleGenerator(get_option(self::WAA_CONF_ATTRIBUTES));
-    $this->renderContent($generator->generateHeaderScript()); // The Escaping takes place in the WideAngleGenerator::generateHeaderScript method.
+    $this->renderContent($this->plugin->generator->generateHeaderScript()); // The Escaping takes place in the WideAngleGenerator::generateHeaderScript method.
   }
 
   /**
@@ -57,8 +58,7 @@ class WideAngleAnalytics {
    * Inteded to be used with 'wp_footer' hook.
    */
   function renderFooterScript() {
-    $generator = new WideAngleGenerator(get_option(self::WAA_CONF_ATTRIBUTES));
-    $this->renderContent($generator->generateHeaderScript()); // The Escaping takes place in the WideAngleGenerator::generateHeaderScript method.
+    $this->renderContent($this->plugin->generator->generateFooterScript()); // The Escaping takes place in the WideAngleGenerator::generateFooterScript method.
   }
 
   /**
@@ -129,7 +129,6 @@ class WideAngleAnalytics {
 
         if(count($errors) === 0) {
           $attributes = new WideAngleAttributes($waaSiteId->get_value(), $waaTrackerDomain->get_value(), $waaIgnoreHash->get_value(), $waaExclusionPaths->get_value(), $waaIncParams->get_value());
-
           update_option(self::WAA_CONF_SITE_ID,         $waaSiteId->get_value());
           update_option(self::WAA_CONF_TRACKER_DOMAIN,  $waaTrackerDomain->get_value());
           update_option(self::WAA_CONF_IGNORE_HASH,     $waaIgnoreHash->get_value());
