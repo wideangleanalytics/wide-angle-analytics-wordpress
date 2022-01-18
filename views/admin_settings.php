@@ -2,6 +2,7 @@
 $siteId               = wp_unslash($this->settings[self::WAA_CONF_SITE_ID]);
 $trackerDomain        = wp_unslash($this->settings[self::WAA_CONF_TRACKER_DOMAIN]);
 $ignoreHash           = filter_var($this->settings[self::WAA_CONF_IGNORE_HASH], FILTER_VALIDATE_BOOLEAN);
+$fingerprint          = filter_var($this->settings[self::WAA_CONF_FINGERPRINT], FILTER_VALIDATE_BOOLEAN);
 $parsedExclusions     = $this->plugin->helpers->parseExclusionSetting(wp_unslash($this->settings[self::WAA_CONF_EXC_PATHS]));
 $parsedIncludeParams  = $this->plugin->helpers->parseIncludeParamsSetting(wp_unslash($this->settings[self::WAA_CONF_INC_PARAMS]));
 $generator            = new WideAngleGenerator($this->settings[self::WAA_CONF_ATTRIBUTES]);
@@ -123,6 +124,18 @@ $generator            = new WideAngleGenerator($this->settings[self::WAA_CONF_AT
                 </label>
               </fieldset>
               <p class="description" id="tagline-description">By default, w URL Fragment/hash is trasmitted as part of the tracking event. You can disable this behaviour. The fragment will be stripped before sending an event.</p>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><label>Browser Fingerprinting</label></th>
+            <td>
+              <fieldset>
+                <legend class="screen-reader-text"><span>Browser Fingerprinting</span></legend>
+                <label>
+                  <input id="waa_fingerprint" type="checkbox" name="waa_fingerprint" <?php if($fingerprint) { echo "checked"; } ?>/> Enable
+                </label>
+              </fieldset>
+              <p class="description" id="tagline-description">The tracker script will <b>not</b> attempt to fingerprint the browser by default. You can improve tracking qaulity by enabling more reliable browser fingerprinting. Enabling this feature might require collecting consent.</p>
             </td>
           </tr>
         </tbody>

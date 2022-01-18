@@ -29,6 +29,14 @@ class WideAngleHelpers {
     }
   }
 
+  function validateFingerprint($name, $fingerprint) {
+    if(filter_var($fingerprint, FILTER_VALIDATE_BOOLEAN)) {
+      return WideAngleValidated::createValid($name, $fingerprint, "true");
+    } else {
+      return WideAngleValidated::createValid($name, $fingerprint, "false");
+    }
+  }
+
   function validateSiteId($name, $siteId) {
     if(preg_match("/^[a-zA-Z0-9]{10,24}$/", $siteId)) {
       return WideAngleValidated::createValid($name, $siteId, strtoupper(trim($siteId)));

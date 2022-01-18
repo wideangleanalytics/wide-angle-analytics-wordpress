@@ -8,18 +8,19 @@ class WideAngleGenerator {
   public $includeParams;
 
   public function __construct($attributes) {
-    $this->siteId = $attributes['site_id'];
-    $this->trackerDomain = $attributes['tracker_domain'];
-    $this->ignoreHash = $attributes['ignore_hash'];
-    $this->exclusionPaths = $attributes['exclusion_paths'];
-    $this->includeParams = $attributes['include_params'];
+    $this->siteId           = $attributes['site_id'];
+    $this->trackerDomain    = $attributes['tracker_domain'];
+    $this->ignoreHash       = $attributes['ignore_hash'];
+    $this->exclusionPaths   = $attributes['exclusion_paths'];
+    $this->includeParams    = $attributes['include_params'];
+    $this->fingerprint      = $attributes['fingerprint'];
   }
 
 
   function generateHeaderScript() {
     $href = esc_attr("https://{$this->trackerDomain}/script/{$this->siteId}.js");
     $script = <<<EOD
-<link href="{$href}" ref="prefetch"/>
+<link href="{$href}" rel="prefetch"/>
 EOD;
     return $script;
   }
@@ -29,9 +30,11 @@ EOD;
     $pathExlusionsAttribute = $this->exclusionPaths != '' ? "data-waa-exc-paths=\""     . esc_attr($this->exclusionPaths) . "\"": '';
     $includeParamsAttribute = $this->includeParams  != '' ? "data-waa-inc-params=\""    . esc_attr($this->includeParams)  . "\"": '';
     $ignoreHashAttribute    = $this->ignoreHash != ''     ? "data-waa-ignore-hash=\""   . esc_attr($this->ignoreHash)     . "\"": 'data-waa-ignore-hash="false"';
+    $fingerprintAttribute   = $this->fingerprint != ''    ? "data-waa-fingerprint=\""   . esc_attr($this->fingerprint)    . "\"": '';
     $script = <<<EOD
 <script async defer
   src="{$trackerUrlAttribute}"
+  $fingerprintAttribute
   $ignoreHashAttribute
   $includeParamsAttribute
   $pathExlusionsAttribute></script>
