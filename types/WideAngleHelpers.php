@@ -37,6 +37,14 @@ class WideAngleHelpers {
     }
   }
 
+  function validateEPrivacyMode($name, $ePrivacyMode) {
+    if($ePrivacyMode === 'consent') {
+      return WideAngleValidated::createValid($name, $ePrivacyMode, "consent");
+    } else {
+      return WideAngleValidated::createValid($name, $ePrivacyMode, "disabled");
+    }
+  }
+
   function validateSiteId($name, $siteId) {
     if(preg_match("/^[a-zA-Z0-9]{10,24}$/", $siteId)) {
       return WideAngleValidated::createValid($name, $siteId, strtoupper(trim($siteId)));

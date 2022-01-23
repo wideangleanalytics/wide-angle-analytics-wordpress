@@ -5,7 +5,7 @@
   Description:          Easily enable and configure Wide Angle Analytics on your Wordpress site
   Author:               Wide Angle Analytics by Input Objects GmbH
   Author URI:           https://wideangle.co
-  Version:              1.0.5
+  Version:              1.0.6
   Requires at least:    5.2
   Requires PHP:         7.2
   License:              GPL v2
@@ -18,6 +18,7 @@ class WideAngleAnalytics {
   const WAA_CONF_SITE_ID                  = "waa_site_id";
   const WAA_CONF_TRACKER_DOMAIN           = "waa_tracker_domain";
   const WAA_CONF_FINGERPRINT              = "waa_fingerprint";
+  const WAA_CONF_EPRIVACY_MODE            = "waa_eprivacy_mode";
   const WAA_CONF_EXC_PATHS                = "waa_exc_path";
   const WAA_CONF_INC_PARAMS               = "waa_inc_params";
   const WAA_CONF_IGNORE_HASH              = "waa_ignore_hash";
@@ -36,6 +37,11 @@ class WideAngleAnalytics {
       "start" => "Starts with",
       "end" => "Ends with",
       "regex" => "RegEx",
+    );
+
+    $this->plugin->ePrivacyModes = array(
+      "disabled" => "Disable Tracking",
+      "consent" => "Track assuming consent"
     );
 
     add_action('admin_init', array( &$this, 'registerPluginSettings' ) );
@@ -117,6 +123,7 @@ class WideAngleAnalytics {
         $waaTrackerDomain   = $this->plugin->helpers->validateTrackerDomain(self::WAA_CONF_TRACKER_DOMAIN, sanitize_text_field($_REQUEST['waa_tracker_domain']));
         $waaIgnoreHash      = $this->plugin->helpers->validateIgnoreHashFlag(self::WAA_CONF_IGNORE_HASH, sanitize_text_field($_REQUEST['waa_ignore_hash']));
         $waaFingerprint     = $this->plugin->helpers->validateFingerprint(self::WAA_CONF_FINGERPRINT, sanitize_text_field($_REQUEST['waa_fingerprint']));
+        $waaEPrivacyMode    = $this->plugin->helpers->validateEPrivacyMode(self::WAA_CONF_EPRIVACY_MODE, sanitize_text_field($_REQUEST['waa_eprivacy_mode']));
         $waaIncParams       = $this->plugin->helpers->validateIncludeParams(self::WAA_CONF_INC_PARAMS, $_REQUEST);
         $waaExclusionPaths  = $this->plugin->helpers->validateExclusionPathsRequest(self::WAA_CONF_EXC_PATHS, $_REQUEST);
 
@@ -136,7 +143,8 @@ class WideAngleAnalytics {
             $waaIgnoreHash->get_value(),
             $waaExclusionPaths->get_value(),
             $waaIncParams->get_value(),
-            $waaFingerprint->get_value()
+            $waaFingerprint->get_value(),
+            $waaEPrivacyMode->get_value()
           );
           update_option(self::WAA_CONF_SITE_ID,         $waaSiteId->get_value());
           update_option(self::WAA_CONF_TRACKER_DOMAIN,  $waaTrackerDomain->get_value());
@@ -144,6 +152,7 @@ class WideAngleAnalytics {
           update_option(self::WAA_CONF_EXC_PATHS,       $waaExclusionPaths->get_value());
           update_option(self::WAA_CONF_INC_PARAMS,      $waaIncParams->get_value());
           update_option(self::WAA_CONF_FINGERPRINT,     $waaFingerprint->get_value());
+          update_option(self::WAA_CONF_EPRIVACY_MODE,   $waaEPrivacyMode->get_value());
           update_option(self::WAA_CONF_ATTRIBUTES,      $attributes->generateAttributes());
           $this->message = __('Settings updated', $this->plugin->name);
         } else {
@@ -158,6 +167,7 @@ class WideAngleAnalytics {
       self::WAA_CONF_TRACKER_DOMAIN           => get_option(self::WAA_CONF_TRACKER_DOMAIN),
       self::WAA_CONF_IGNORE_HASH              => get_option(self::WAA_CONF_IGNORE_HASH),
       self::WAA_CONF_FINGERPRINT              => get_option(self::WAA_CONF_FINGERPRINT),
+      self::WAA_CONF_EPRIVACY_MODE            => get_option(self::WAA_CONF_EPRIVACY_MODE),
       self::WAA_CONF_ATTRIBUTES               => get_option(self::WAA_CONF_ATTRIBUTES)
     );
     include_once( $this->plugin->folder . '/views/admin_settings.php' );
@@ -182,6 +192,7 @@ class WideAngleAnalytics {
     register_setting($this->plugin->name, self::WAA_CONF_TRACKER_DOMAIN, array('default' => 'stats.wideangle.co'));
     register_setting($this->plugin->name, self::WAA_CONF_IGNORE_HASH, array('default' => 'false'));
     register_setting($this->plugin->name, self::WAA_CONF_FINGERPRINT, array('default' => 'false'));
+    register_setting($this->plugin->name, self::WAA_CONF_EPRIVACY_MODE, array('default' => 'disabled'));
     register_setting($this->plugin->name, self::WAA_CONF_ATTRIBUTES, array('type' => 'array'));
   }
 

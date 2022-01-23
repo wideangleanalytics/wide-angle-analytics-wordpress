@@ -3,6 +3,7 @@ $siteId               = wp_unslash($this->settings[self::WAA_CONF_SITE_ID]);
 $trackerDomain        = wp_unslash($this->settings[self::WAA_CONF_TRACKER_DOMAIN]);
 $ignoreHash           = filter_var($this->settings[self::WAA_CONF_IGNORE_HASH], FILTER_VALIDATE_BOOLEAN);
 $fingerprint          = filter_var($this->settings[self::WAA_CONF_FINGERPRINT], FILTER_VALIDATE_BOOLEAN);
+$ePrivacyMode         = wp_unslash($this->settings[self::WAA_CONF_EPRIVACY_MODE]);
 $parsedExclusions     = $this->plugin->helpers->parseExclusionSetting(wp_unslash($this->settings[self::WAA_CONF_EXC_PATHS]));
 $parsedIncludeParams  = $this->plugin->helpers->parseIncludeParamsSetting(wp_unslash($this->settings[self::WAA_CONF_INC_PARAMS]));
 $generator            = new WideAngleGenerator($this->settings[self::WAA_CONF_ATTRIBUTES]);
@@ -136,6 +137,26 @@ $generator            = new WideAngleGenerator($this->settings[self::WAA_CONF_AT
                 </label>
               </fieldset>
               <p class="description" id="tagline-description">The tracker script will <b>not</b> attempt to fingerprint the browser by default. You can improve tracking qaulity by enabling more reliable browser fingerprinting. Enabling this feature might require collecting consent.</p>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><label>ePrivacyMode</label></th>
+            <td>
+              <fieldset>
+                <legend class="screen-reader-text"><span>Browser Fingerprinting</span></legend>
+                <label>
+                  <select name="waa_eprivacy_mode" id="waa_eprivacy_mode">
+                      <?php
+                        foreach($this->plugin->ePrivacyModes as $id => $label) {
+                      ?>
+                        <option value="<?php echo esc_attr($id); ?>"<?php if($ePrivacyMode == $id) echo ' selected'; ?>><?php echo esc_html($label); ?></option>
+                      <?php
+                        }
+                      ?>
+                    </select>
+                </label>
+              </fieldset>
+              <p class="description" id="tagline-description">When you disable tracking, the script collects only bare-bone information. You can opt for more verbose tracking, but be aware that according to ePrivacy Regulations, this might require visitor's consent.</p>
             </td>
           </tr>
         </tbody>

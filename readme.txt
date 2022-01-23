@@ -4,7 +4,7 @@ Tags: web analytics, tracking, web traffic, analytics, statistics, stats
 Requires at least: 5.2
 Tested up to: 5.8.2
 Requires PHP: 7.2
-Stable tag: 1.0.5
+Stable tag: 1.0.6
 License: GPLv2
 
 Easily add Wide Angle Analytics tracker script to your WordPress site. You can quickly configure your web analytics tracker script.
