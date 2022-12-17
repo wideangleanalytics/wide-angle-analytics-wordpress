@@ -85,9 +85,10 @@ class WideAngleHelpers {
       if(preg_match(self::excludePathRequestKeyPattern, $key, $idx)) {
         $valueKey = "waa_exc_path_".$idx[1]."_value";
         $sanitizedValue = trim(sanitize_text_field($request[$valueKey]));
-        if($sanitizedValue != null) {
-          if(filter_var($sanitizedValue, FILTER_VALIDATE_REGEXP)) {
-            $typedExclusion = "[" . $exclusionType . "]" . $sanitizedValue;
+        if($sanitizedValue != null) {           
+          $asRegExp = "/" . wp_unslash($sanitizedValue) . "/";
+          if(@preg_match($asRegExp, null) === 0) {
+            $typedExclusion = "[" . $exclusionType . "]" . wp_unslash($sanitizedValue);
             array_push($exclusions, $typedExclusion);
           } else {
             $typedExclusion = "[" . $exclusionType . "]" . filter_var($sanitizedValue, FILTER_SANITIZE_SPECIAL_CHARS);
