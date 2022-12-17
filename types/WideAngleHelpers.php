@@ -88,7 +88,7 @@ class WideAngleHelpers {
         if($sanitizedValue != null) {           
           $asRegExp = "/" . wp_unslash($sanitizedValue) . "/";
           if(@preg_match($asRegExp, null) === 0) {
-            $typedExclusion = "[" . $exclusionType . "]" . wp_unslash($sanitizedValue);
+            $typedExclusion = "[" . $exclusionType . "]" . filter_var($sanitizedValue, FILTER_SANITIZE_SPECIAL_CHARS);
             array_push($exclusions, $typedExclusion);
           } else {
             $typedExclusion = "[" . $exclusionType . "]" . filter_var($sanitizedValue, FILTER_SANITIZE_SPECIAL_CHARS);

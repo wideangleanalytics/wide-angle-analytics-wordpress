@@ -175,7 +175,7 @@ $generator            = new WideAngleGenerator($this->settings[self::WAA_CONF_AT
 
 &lt;/head&gt;
 &lt;!-- .. --&gt;
-<b><?php echo esc_html($generator->generateFooterScript()); ?></b>
+<b><?php echo esc_html(wp_unslash($generator->generateFooterScript())); ?></b>
 </pre>
 </code>
     </div>
