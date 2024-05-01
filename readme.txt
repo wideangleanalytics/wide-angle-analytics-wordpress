@@ -2,9 +2,9 @@
 Contributors: jrozanski,inputobjects
 Tags: web analytics, tracking, web traffic, analytics, statistics, stats
 Requires at least: 5.2
-Tested up to: 6.1.1
+Tested up to: 6.5.2
 Requires PHP: 7.2
-Stable tag: 1.0.7
+Stable tag: 1.0.8
 License: GPLv2
 
 Easily add Wide Angle Analytics tracker script to your WordPress site. You can quickly configure your web analytics tracker script.
@@ -61,7 +61,12 @@ We run a business around serving the needs of our customer. That's you.
 You will find most of your answers in the [Knowledge Base](https://wideangle.co/documentation). Should you require further assistance, please [get in touch](https://wideangle.co/support) with our team.
 
 == Changelog ==
-V1.0.7 
+V1.0.8
+- Expose DNT Flag override
+- Test with WordPress 6.5.2
+- Drop un-used ePrivacy flag
+
+V1.0.7
 - Fix configuration of custom RegEx in the exclusion paths
 - Test with WordPress 6.1.1
 
@@ -71,4 +76,3 @@ V1.0.6
 V1.0.5
 - Support for `data-waa-fingerprint` toggle enabling optional browser fingerprinting.
 - Fix the header generate to use valid `prefetch` attribute
-

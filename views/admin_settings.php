@@ -2,8 +2,8 @@
 $siteId               = wp_unslash($this->settings[self::WAA_CONF_SITE_ID]);
 $trackerDomain        = wp_unslash($this->settings[self::WAA_CONF_TRACKER_DOMAIN]);
 $ignoreHash           = filter_var($this->settings[self::WAA_CONF_IGNORE_HASH], FILTER_VALIDATE_BOOLEAN);
+$supressDnt           = filter_var($this->settings[self::WAA_CONF_SUPRESS_DNT], FILTER_VALIDATE_BOOLEAN);
 $fingerprint          = filter_var($this->settings[self::WAA_CONF_FINGERPRINT], FILTER_VALIDATE_BOOLEAN);
-$ePrivacyMode         = wp_unslash($this->settings[self::WAA_CONF_EPRIVACY_MODE]);
 $parsedExclusions     = $this->plugin->helpers->parseExclusionSetting(wp_unslash($this->settings[self::WAA_CONF_EXC_PATHS]));
 $parsedIncludeParams  = $this->plugin->helpers->parseIncludeParamsSetting(wp_unslash($this->settings[self::WAA_CONF_INC_PARAMS]));
 $generator            = new WideAngleGenerator($this->settings[self::WAA_CONF_ATTRIBUTES]);
@@ -124,7 +124,19 @@ $generator            = new WideAngleGenerator($this->settings[self::WAA_CONF_AT
                   <input id="waa_ignore_hash" type="checkbox" name="waa_ignore_hash" <?php if($ignoreHash) { echo "checked"; } ?>/> Ignore
                 </label>
               </fieldset>
-              <p class="description" id="tagline-description">By default, w URL Fragment/hash is trasmitted as part of the tracking event. You can disable this behaviour. The fragment will be stripped before sending an event.</p>
+              <p class="description" id="tagline-description">By default, URL Fragment/hash is trasmitted as part of the tracking event. You can disable this behaviour. The fragment will be stripped before sending an event.</p>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><label>Supress Do-Not-Track</label></th>
+            <td>
+              <fieldset>
+                <legend class="screen-reader-text"><span>Supress Do-Not-Track</span></legend>
+                <label>
+                  <input id="waa_supress_dnt" type="checkbox" name="waa_supress_dnt" <?php if($supressDnt) { echo "checked"; } ?>/> Supress
+                </label>
+              </fieldset>
+              <p class="description" id="tagline-description">Wide Angle Analytics respects Do-Not-Track (DNT) browser flag by default. You override this behaviour and always ignore this flag. Please consult relevant laws and regulation whether overriding DNT requires user consent.</p>
             </td>
           </tr>
           <tr>
@@ -137,26 +149,6 @@ $generator            = new WideAngleGenerator($this->settings[self::WAA_CONF_AT
                 </label>
               </fieldset>
               <p class="description" id="tagline-description">The tracker script will <b>not</b> attempt to fingerprint the browser by default. You can improve tracking qaulity by enabling more reliable browser fingerprinting. Enabling this feature might require collecting consent.</p>
-            </td>
-          </tr>
-          <tr>
-            <th scope="row"><label>ePrivacyMode</label></th>
-            <td>
-              <fieldset>
-                <legend class="screen-reader-text"><span>Browser Fingerprinting</span></legend>
-                <label>
-                  <select name="waa_eprivacy_mode" id="waa_eprivacy_mode">
-                      <?php
-                        foreach($this->plugin->ePrivacyModes as $id => $label) {
-                      ?>
-                        <option value="<?php echo esc_attr($id); ?>"<?php if($ePrivacyMode == $id) echo ' selected'; ?>><?php echo esc_html($label); ?></option>
-                      <?php
-                        }
-                      ?>
-                    </select>
-                </label>
-              </fieldset>
-              <p class="description" id="tagline-description">When you disable tracking, the script collects only bare-bone information. You can opt for more verbose tracking, but be aware that according to ePrivacy Regulations, this might require visitor's consent.</p>
             </td>
           </tr>
         </tbody>

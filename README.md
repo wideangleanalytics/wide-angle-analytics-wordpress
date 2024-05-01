@@ -6,7 +6,7 @@ Easily add [Wide Angle Analytics](https://wideangle.co) tracker script to your W
 
 
 * Requires at least: 5.2
-* Tested up to: 6.1.1
+* Tested up to: 6.5.2
 * Requires PHP: 7.2
 
 

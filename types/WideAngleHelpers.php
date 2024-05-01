@@ -29,19 +29,19 @@ class WideAngleHelpers {
     }
   }
 
+  function validateSupressDntFlag($name, $supressDnt) {
+    if(filter_var($supressDnt, FILTER_VALIDATE_BOOLEAN)) {
+      return WideAngleValidated::createValid($name, $supressDnt, "true");
+    } else {
+      return WideAngleValidated::createValid($name, $supressDnt, "false");
+    }
+  }
+
   function validateFingerprint($name, $fingerprint) {
     if(filter_var($fingerprint, FILTER_VALIDATE_BOOLEAN)) {
       return WideAngleValidated::createValid($name, $fingerprint, "true");
     } else {
       return WideAngleValidated::createValid($name, $fingerprint, "false");
-    }
-  }
-
-  function validateEPrivacyMode($name, $ePrivacyMode) {
-    if($ePrivacyMode === 'consent') {
-      return WideAngleValidated::createValid($name, $ePrivacyMode, "consent");
-    } else {
-      return WideAngleValidated::createValid($name, $ePrivacyMode, "disabled");
     }
   }
 
@@ -85,7 +85,7 @@ class WideAngleHelpers {
       if(preg_match(self::excludePathRequestKeyPattern, $key, $idx)) {
         $valueKey = "waa_exc_path_".$idx[1]."_value";
         $sanitizedValue = trim(sanitize_text_field($request[$valueKey]));
-        if($sanitizedValue != null) {           
+        if($sanitizedValue != null) {
           $asRegExp = "/" . wp_unslash($sanitizedValue) . "/";
           if(@preg_match($asRegExp, null) === 0) {
             $typedExclusion = "[" . $exclusionType . "]" . filter_var($sanitizedValue, FILTER_SANITIZE_SPECIAL_CHARS);
