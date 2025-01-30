@@ -29,11 +29,11 @@ class WideAngleHelpers {
     }
   }
 
-  function validateSupressDntFlag($name, $supressDnt) {
-    if(filter_var($supressDnt, FILTER_VALIDATE_BOOLEAN)) {
-      return WideAngleValidated::createValid($name, $supressDnt, "true");
+  function validateSuppressDntFlag($name, $suppressDnt) {
+    if(filter_var($suppressDnt, FILTER_VALIDATE_BOOLEAN)) {
+      return WideAngleValidated::createValid($name, $suppressDnt, "true");
     } else {
-      return WideAngleValidated::createValid($name, $supressDnt, "false");
+      return WideAngleValidated::createValid($name, $suppressDnt, "false");
     }
   }
 

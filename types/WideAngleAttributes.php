@@ -6,10 +6,10 @@ class WideAngleAttributes {
   public $trackerDomain;
   public $exclusionString;
   public $includeParamsString;
-  public $supressDnt;
+  public $suppressDnt;
   private $helpers;
 
-  public function __construct($siteId, $trackerDomain, $ignoreHash, $exclusionString, $includeParamsString, $fingerprint, $supressDnt) {
+  public function __construct($siteId, $trackerDomain, $ignoreHash, $exclusionString, $includeParamsString, $fingerprint, $suppressDnt) {
     $this->siteId = $siteId;
     $this->trackerDomain = $trackerDomain;
     $this->ignoreHash = $ignoreHash;
@@ -17,7 +17,7 @@ class WideAngleAttributes {
     $this->includeParamsString = $includeParamsString;
     $this->fingerprint = $fingerprint;
     $this->ePrivacyMode = $ePrivacyMode;
-    $this->supressDnt = $supressDnt;
+    $this->suppressDnt = $suppressDnt;
     $this->helpers = new WideAngleHelpers();
   }
 
@@ -27,7 +27,7 @@ class WideAngleAttributes {
       'tracker_domain' => $this->trackerDomain,
       'ignore_hash' => $this->ignoreHash,
       'fingerprint' => $this->fingerprint,
-      'supress_dnt' => $this->supressDnt,
+      'suppress_dnt' => $this->suppressDnt,
       'exclusion_paths' => $this->generateExclusionsAttribute(),
       'include_params' => $this->generateIncludeParamsAttribute()
     );

@@ -15,7 +15,7 @@ class WideAngleGenerator {
     $this->exclusionPaths   = $attributes['exclusion_paths'];
     $this->includeParams    = $attributes['include_params'];
     $this->fingerprint      = $attributes['fingerprint'];
-    $this->supressDnt       = $attributes['supress_dnt'];
+    $this->suppressDnt       = $attributes['suppress_dnt'];
   }
 
 
@@ -33,13 +33,13 @@ EOD;
     $includeParamsAttribute = $this->includeParams  != ''       ? "data-waa-inc-params=\""    . esc_attr($this->includeParams)  . "\"": '';
     $ignoreHashAttribute    = $this->ignoreHash != ''           ? "data-waa-ignore-hash=\""   . esc_attr($this->ignoreHash)     . "\"": 'data-waa-ignore-hash="false"';
     $fingerprintAttribute   = $this->fingerprint != ''          ? "data-waa-fingerprint=\""   . esc_attr($this->fingerprint)    . "\"": '';
-    $supressDntAttribute    = $this->supressDnt != ''           ? "data-waa-dnt-supress=\""   . esc_attr($this->supressDnt)     . "\"": 'data-waa-dnt-supress="false"';
+    $suppressDntAttribute    = $this->suppressDnt != ''           ? "data-waa-dnt-suppress=\""   . esc_attr($this->suppressDnt)     . "\"": 'data-waa-dnt-suppress="false"';
     $script = <<<EOD
 <script async defer
   src="{$trackerUrlAttribute}"
   $fingerprintAttribute
   $ignoreHashAttribute
-  $supressDntAttribute
+  $suppressDntAttribute
   $includeParamsAttribute
   $pathExlusionsAttribute></script>
 EOD;

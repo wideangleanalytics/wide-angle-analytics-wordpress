@@ -2,7 +2,7 @@
 $siteId               = wp_unslash($this->settings[self::WAA_CONF_SITE_ID]);
 $trackerDomain        = wp_unslash($this->settings[self::WAA_CONF_TRACKER_DOMAIN]);
 $ignoreHash           = filter_var($this->settings[self::WAA_CONF_IGNORE_HASH], FILTER_VALIDATE_BOOLEAN);
-$supressDnt           = filter_var($this->settings[self::WAA_CONF_SUPRESS_DNT], FILTER_VALIDATE_BOOLEAN);
+$suppressDnt           = filter_var($this->settings[self::WAA_CONF_SUPPRESS_DNT], FILTER_VALIDATE_BOOLEAN);
 $fingerprint          = filter_var($this->settings[self::WAA_CONF_FINGERPRINT], FILTER_VALIDATE_BOOLEAN);
 $parsedExclusions     = $this->plugin->helpers->parseExclusionSetting(wp_unslash($this->settings[self::WAA_CONF_EXC_PATHS]));
 $parsedIncludeParams  = $this->plugin->helpers->parseIncludeParamsSetting(wp_unslash($this->settings[self::WAA_CONF_INC_PARAMS]));
@@ -128,12 +128,12 @@ $generator            = new WideAngleGenerator($this->settings[self::WAA_CONF_AT
             </td>
           </tr>
           <tr>
-            <th scope="row"><label>Supress Do-Not-Track</label></th>
+            <th scope="row"><label>Suppress Do-Not-Track</label></th>
             <td>
               <fieldset>
-                <legend class="screen-reader-text"><span>Supress Do-Not-Track</span></legend>
+                <legend class="screen-reader-text"><span>Suppress Do-Not-Track</span></legend>
                 <label>
-                  <input id="waa_supress_dnt" type="checkbox" name="waa_supress_dnt" <?php if($supressDnt) { echo "checked"; } ?>/> Supress
+                  <input id="waa_suppress_dnt" type="checkbox" name="waa_suppress_dnt" <?php if($suppressDnt) { echo "checked"; } ?>/> Suppress
                 </label>
               </fieldset>
               <p class="description" id="tagline-description">Wide Angle Analytics respects Do-Not-Track (DNT) browser flag by default. You override this behaviour and always ignore this flag. Please consult relevant laws and regulation whether overriding DNT requires user consent.</p>
